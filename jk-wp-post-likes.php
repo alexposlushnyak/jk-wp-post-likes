@@ -56,4 +56,56 @@ class jk_wp_post_likes
         <?php
     }
 
+    public function ajax_handler()
+    {
+
+        $post_id = $_POST['post_id'];
+
+        $user_id = $_POST['user_id'];
+
+        $active = $_POST['active'];
+
+        $likes = get_option('likes_user_' . $user_id);
+
+        if (empty($likes)):
+
+            $likes = array();
+
+        endif;
+
+        if (!in_array($post_id, $likes) && empty($active)):
+
+            array_push($likes, $post_id);
+
+            update_option('likes_user_' . $user_id, $likes, false);
+
+        endif;
+
+        if ($active === 'active'):
+
+            if (($key = array_search($post_id, $likes)) !== false) :
+
+                unset($likes[$key]);
+
+            endif;
+
+            update_option('likes_user_' . $user_id, $likes, false);
+
+        endif;
+
+        print_r($likes);
+
+        die();
+
+    }
+
+    public function ajax_init()
+    {
+
+        add_action('wp_ajax_nopriv_jk_likes', [$this, 'ajax_handler']);
+
+        add_action('wp_ajax_jk_likes', [$this, 'ajax_handler']);
+
+    }
+
 }
