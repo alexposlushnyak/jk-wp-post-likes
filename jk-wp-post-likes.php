@@ -3,7 +3,7 @@
 class jk_wp_post_likes
 {
 
-    public function the_like_button($id, $user_id)
+    public static function the_like_button($id, $user_id)
     {
 
         $is_user_logged_in = is_user_logged_in();
